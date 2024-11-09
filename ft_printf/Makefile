@@ -33,6 +33,7 @@ $(OBJ_DIR):
 clean:
 	make -C $(LIBFT_DIR) clean
 	$(RM) $(OBJ_DIR)
+	$(RM) $(NAME)
 
 fclean : clean
 	make -C $(LIBFT_DIR) fclean

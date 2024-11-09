@@ -10,19 +10,21 @@ OBJ_DIR = obj
 
 SRC_DIR = src
 
-GCCFLAGS = -g -Wall -Werror -Wextra -fsanitize=address
+GCCFLAGS = -g -Wall -Werror -Wextra
 
 SRC = main.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
+	
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	gcc $(GCCFLAGS) -I includes -I mlx_linux -o $@ -c $? 
+	gcc $(GCCFLAGS) -I/usr/include -Iincludes -Imlx_linux -o $@ -c $? 
 
 all: $(NAME)
 
 $(NAME): $(PRINTF) $(OBJ_DIR) $(OBJ)
-	gcc $(GCCFLAGS) $(OBJ) -I includes -Lft_printf -lftprintf -Lmlx-linux -lmlx_Linux -Imlx_linux -lXext -lX11 -o $(NAME)
+	gcc $(GCCFLAGS) $(OBJ) -L/usr/lib -I includes -Lft_printf -lftprintf -Lmlx_linux -lmlx_Linux -Imlx_linux -lXext -lX11 -o $(NAME)
+
 
 $(PRINTF):
 	make -C $(PRINTF_DIR) all
