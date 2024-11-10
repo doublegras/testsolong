@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/09 18:45:25 by SET YOUR USER    ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/10 21:22:15 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,9 @@ int	close_window(t_game *game)
 	exit(0);
 }
 
-
 void	err(char *str, t_game *game)
 {
 	perror(str);
-	// ft_putstr_fd(str, 2);
 	if (game)
 		close_window(game);
 	exit(1);
@@ -56,6 +54,29 @@ int	count_line(int fd, t_game *game)
 	}
 }
 
+void	get_player_pos(t_game *game)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'P')
+			{
+				game->player_x = x;
+				game->player_y = y;
+				return ;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
 void	parse_map(char *file, t_game *game)
 {
 	int		fd;
@@ -70,7 +91,7 @@ void	parse_map(char *file, t_game *game)
 	close(fd);
 	map = malloc(sizeof(char *) * (nb + 1));
 	if (!map)
-		err("map malloc error", game);
+		err("Map malloc error", game);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		err("Read error", game);
@@ -80,6 +101,7 @@ void	parse_map(char *file, t_game *game)
 	map[i] = NULL;
 	close(fd);
 	game->map = map;
+	get_player_pos(game);
 }
 
 int	display_map(t_game *game)
@@ -98,7 +120,10 @@ int	display_map(t_game *game)
 			if (game->map[y][x] == '0')
 				mlx_put_image_to_window(game->mlx, game->win, game->img->grass, x * PIXEL_SIZE, y * PIXEL_SIZE);
 			if (game->map[y][x] == 'P')
+			{
 				mlx_put_image_to_window(game->mlx, game->win, game->img->player, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				game->map[y][x] = '0';
+			}
 			if (game->map[y][x] == 'C')
 				mlx_put_image_to_window(game->mlx, game->win, game->img->coin, x * PIXEL_SIZE, y * PIXEL_SIZE);
 			if (game->map[y][x] == 'E')
@@ -110,10 +135,30 @@ int	display_map(t_game *game)
 	return (0);
 }
 
-// void	move_player(t_game game)
-// {
-//
-// }
+void	move_player(t_game *game, int key)
+{
+	// s = 115 a = 97 d = 100
+	if (key == 119 && game->map[game->player_y - 1][game->player_x] == '0')
+	{
+		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+		mlx_put_image_to_window(game->mlx, game->win, game->img->player, game->player_x * PIXEL_SIZE, --game->player_y * PIXEL_SIZE);
+	}
+	else if (key == 115 && game->map[game->player_y + 1][game->player_x] == '0')
+	{
+		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+		mlx_put_image_to_window(game->mlx, game->win, game->img->player, game->player_x * PIXEL_SIZE, ++game->player_y * PIXEL_SIZE);
+	}
+	else if (key == 97 && game->map[game->player_y][game->player_x - 1] == '0')
+	{
+		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+		mlx_put_image_to_window(game->mlx, game->win, game->img->player, --game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+	}
+	else if (key == 100 && game->map[game->player_y][game->player_x + 1] == '0')
+	{
+		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+		mlx_put_image_to_window(game->mlx, game->win, game->img->player, ++game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+	}
+}
 
 int	handle_key(int keycode, t_game *game)
 {
@@ -123,7 +168,7 @@ int	handle_key(int keycode, t_game *game)
 		close_window(game);
 	if (keycode == 119 || keycode == 97 || keycode == 115 || keycode == 100)
 	{
-		// move_player(game);
+		move_player(game, keycode);
 		ft_printf("%d\n", ++i);
 	}
 	return (0);
@@ -144,7 +189,7 @@ int	main(int ac, char **av)
 	game.win = mlx_new_window(game.mlx, 1920, 1080, "so_long");
 	if (!game.win)
 		exit(1);
-	img.player = mlx_xpm_file_to_image(game.mlx, "mlx_linux/test/open24.xpm", &img_w, &img_h);
+	img.player = mlx_xpm_file_to_image(game.mlx, "img/cadillac.xpm", &img_w, &img_h);
 	img.wall = mlx_xpm_file_to_image(game.mlx, "img/wall.xpm", &img_w, &img_h);
 	img.grass = mlx_xpm_file_to_image(game.mlx, "img/grass.xpm", &img_w, &img_h);
 	img.coin = mlx_xpm_file_to_image(game.mlx, "img/coin.xpm", &img_w, &img_h);
