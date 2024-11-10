@@ -12,7 +12,7 @@ SRC_DIR = src
 
 GCCFLAGS = -g -Wall -Werror -Wextra
 
-SRC = main.c
+SRC = main.c move_player.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 	

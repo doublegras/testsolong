@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/10 21:22:15 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/10 23:03:31 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,41 +135,19 @@ int	display_map(t_game *game)
 	return (0);
 }
 
-void	move_player(t_game *game, int key)
-{
-	// s = 115 a = 97 d = 100
-	if (key == 119 && game->map[game->player_y - 1][game->player_x] == '0')
-	{
-		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-		mlx_put_image_to_window(game->mlx, game->win, game->img->player, game->player_x * PIXEL_SIZE, --game->player_y * PIXEL_SIZE);
-	}
-	else if (key == 115 && game->map[game->player_y + 1][game->player_x] == '0')
-	{
-		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-		mlx_put_image_to_window(game->mlx, game->win, game->img->player, game->player_x * PIXEL_SIZE, ++game->player_y * PIXEL_SIZE);
-	}
-	else if (key == 97 && game->map[game->player_y][game->player_x - 1] == '0')
-	{
-		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-		mlx_put_image_to_window(game->mlx, game->win, game->img->player, --game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-	}
-	else if (key == 100 && game->map[game->player_y][game->player_x + 1] == '0')
-	{
-		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-		mlx_put_image_to_window(game->mlx, game->win, game->img->player, ++game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-	}
-}
-
 int	handle_key(int keycode, t_game *game)
 {
 	static int	i;
+	int			tmp;
 
+	tmp = i;
 	if (keycode == 65307)
 		close_window(game);
 	if (keycode == 119 || keycode == 97 || keycode == 115 || keycode == 100)
 	{
-		move_player(game, keycode);
-		ft_printf("%d\n", ++i);
+		move_player(game, keycode, &i);
+		if (i > tmp)
+			ft_printf("%d\n", i);
 	}
 	return (0);
 }
@@ -186,7 +164,7 @@ int	main(int ac, char **av)
 	game.mlx = mlx_init();
 	if (!game.mlx)
 		exit(1);
-	game.win = mlx_new_window(game.mlx, 1920, 1080, "so_long");
+	game.win = mlx_new_window(game.mlx, 2560, 1440, "so_long");
 	if (!game.win)
 		exit(1);
 	img.player = mlx_xpm_file_to_image(game.mlx, "img/cadillac.xpm", &img_w, &img_h);

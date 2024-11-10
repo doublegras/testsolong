@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 11:51:36 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/09 18:42:24 by SET YOUR USER    ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/10 22:56:43 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "../ft_printf/libft/libft.h"
 # include <stdio.h>
 
-# define PIXEL_SIZE 50
+# define PIXEL_SIZE 64
 
 typedef struct s_imgx
 {
@@ -38,5 +38,8 @@ typedef struct s_game
 	int			player_x;
 	int			player_y;
 }	t_game;
+
+void	move_player(t_game *game, int key, int *i);
+int		close_window(t_game *game);
 
 #endif
