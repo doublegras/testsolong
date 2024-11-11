@@ -6,7 +6,7 @@
 /*   By: SET YOUR USER UP <SET YOUR EMAIL UP>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 14:40:56 by SET YOUR USER     #+#    #+#             */
-/*   Updated: 2024/11/11 16:30:59 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/11 17:32:29 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ static int	check_up_down(t_game *game, int y)
 	while (game->map[y][x] != '\n')
 	{
 		if (game->map[y][x] != '1')
+		{
+			printf("AAAAAAAAAAA");
+			printf("Y = %d\n", y);
 			return (0);
+		}
 		x++;
 	}
 	return (1);
@@ -66,9 +70,9 @@ static int	check_square(t_game *game)
 
 static int	check_all_cases(t_game *game)
 {
-	int	y;
-	int	x;
-	char c;
+	int		y;
+	int		x;
+	char	c;
 
 	y = 0;
 	while (game->map[y])
