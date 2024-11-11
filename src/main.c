@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/10 23:03:31 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/11 16:13:26 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,13 @@ void	destroy_images(t_game *game)
 int	close_window(t_game *game)
 {
 	destroy_images(game);
-	mlx_destroy_window(game->mlx, game->win);
-	mlx_destroy_display(game->mlx);
-	free(game->mlx);
+	if (game->mlx && game->win)
+		mlx_destroy_window(game->mlx, game->win);
+	if (game->mlx)
+	{
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+	}
 	exit(0);
 }
 
@@ -35,7 +39,7 @@ void	err(char *str, t_game *game)
 	exit(1);
 }
 
-int	count_line(int fd, t_game *game)
+int	count_line_fd(int fd, t_game *game)
 {
 	int		i;
 	char	*line;
@@ -52,6 +56,7 @@ int	count_line(int fd, t_game *game)
 			return (i);
 		i++;
 	}
+		
 }
 
 void	get_player_pos(t_game *game)
@@ -87,7 +92,7 @@ void	parse_map(char *file, t_game *game)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		err("Read error", game);
-	nb = count_line(fd, game);
+	nb = count_line_fd(fd, game);
 	close(fd);
 	map = malloc(sizeof(char *) * (nb + 1));
 	if (!map)
@@ -176,6 +181,7 @@ int	main(int ac, char **av)
 		exit(1);
 	game.img = &img;
 	parse_map(av[1], &game);
+	map_check(&game);
 	mlx_expose_hook(game.win, display_map, &game);
 	mlx_key_hook(game.win, handle_key, &game);
 	mlx_hook(game.win, 17, 0, close_window, &game);

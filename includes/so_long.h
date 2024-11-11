@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 11:51:36 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/10 22:56:43 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/11 16:03:06 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,9 @@ typedef struct s_game
 
 void	move_player(t_game *game, int key, int *i);
 int		close_window(t_game *game);
+void	map_check(t_game *game);
+void	err(char *str, t_game *game);
+int		count_line(t_game *game);
+int		check_case(t_game *game, char c);
 
 #endif
