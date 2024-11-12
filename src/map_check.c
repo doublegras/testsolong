@@ -6,7 +6,7 @@
 /*   By: SET YOUR USER UP <SET YOUR EMAIL UP>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 14:40:56 by SET YOUR USER     #+#    #+#             */
-/*   Updated: 2024/11/11 17:32:29 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/12 16:47:00 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,10 @@ static int	check_up_down(t_game *game, int y)
 	int	x;
 
 	x = 0;
-	while (game->map[y][x] != '\n')
+	while (game->map[y][x] != 0 && game->map[y][x] != '\n')
 	{
 		if (game->map[y][x] != '1')
-		{
-			printf("AAAAAAAAAAA");
-			printf("Y = %d\n", y);
 			return (0);
-		}
 		x++;
 	}
 	return (1);
@@ -93,16 +89,14 @@ static int	check_all_cases(t_game *game)
 void	map_check(t_game *game)
 {
 	if (!check_square(game))
-		err("Provide a rectangle map", game);
+		err("Error\nProvide a rectangle map", game);
 	if (!check_all_cases(game))
-		err("Your map should contains only characters 'P', 'E', '0', '1' and 'C'", game);
+		err("Error\nYour map should contains only characters 'P', 'E', '0', '1' and 'C'", game);
 	if (!check_up_down(game, 0) || !check_up_down(game, count_line(game) - 1)
 	|| !check_side(game, 0) || !check_side(game, ft_strlen(game->map[0]) - 2))
-		err("Your map should be surrounded by wall", game);
+		err("Error\nYour map should be surrounded by wall", game);
 	if (check_case(game, 'P') != 1 || check_case(game, 'E') != 1
 		|| check_case(game, 'C') < 1)
-		err("Your map should contains 1 player, 1 exit and at least 1 coin", game);
+		err("Error\nYour map should contains 1 player, 1 exit and at least 1 coin", game);
 }
-
-
 

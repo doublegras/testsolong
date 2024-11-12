@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/11 16:13:26 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/12 16:48:22 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	close_window(t_game *game)
 
 void	err(char *str, t_game *game)
 {
-	perror(str);
+	ft_putstr_fd(str, 2);
 	if (game)
 		close_window(game);
 	exit(1);
@@ -46,7 +46,7 @@ int	count_line_fd(int fd, t_game *game)
 
 	line = get_next_line(fd);
 	if (!line)
-		err("Error while getting the line", game);
+		err("Error\nCan't get the line", game);
 	i = 1;
 	while (1)
 	{
@@ -91,15 +91,15 @@ void	parse_map(char *file, t_game *game)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err("Read error", game);
+		err("Error\nRead error", game);
 	nb = count_line_fd(fd, game);
 	close(fd);
 	map = malloc(sizeof(char *) * (nb + 1));
 	if (!map)
-		err("Map malloc error", game);
+		err("Error\nMap malloc error", game);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err("Read error", game);
+		err("Error\nRead error", game);
 	i = 0;
 	while (i < nb)
 		map[i++] = get_next_line(fd);
@@ -164,12 +164,16 @@ int	main(int ac, char **av)
 	int		img_w;
 	int		img_h;
 
+	img_w = PIXEL_SIZE;
+	img_h = PIXEL_SIZE;
 	if (ac != 2)
-		err("You must provide one argument", NULL);
+		err("Error\nYou must provide one argument", NULL);
+	game.map_file = av[1];
+	check_file_extension(&game);
 	game.mlx = mlx_init();
 	if (!game.mlx)
 		exit(1);
-	game.win = mlx_new_window(game.mlx, 2560, 1440, "so_long");
+	game.win = mlx_new_window(game.mlx, 2560, 1600, "so_long");
 	if (!game.win)
 		exit(1);
 	img.player = mlx_xpm_file_to_image(game.mlx, "img/cadillac.xpm", &img_w, &img_h);
@@ -180,7 +184,8 @@ int	main(int ac, char **av)
 	if (!img.player)
 		exit(1);
 	game.img = &img;
-	parse_map(av[1], &game);
+	parse_map(game.map_file, &game);
+	count_coin(&game);
 	map_check(&game);
 	mlx_expose_hook(game.win, display_map, &game);
 	mlx_key_hook(game.win, handle_key, &game);
