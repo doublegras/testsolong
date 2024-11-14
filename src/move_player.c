@@ -6,13 +6,13 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 22:43:42 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/12 15:55:21 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/14 20:11:53 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
-extern int	nb_coin;
+extern int	g_nb_coin;
 
 static int	make_move(t_game *game, int x, int y, int *i)
 {
@@ -27,7 +27,7 @@ static int	make_move(t_game *game, int x, int y, int *i)
 		}
 		if (game->map[y][x] == 'E')
 		{
-			if (c == nb_coin)
+			if (c == g_nb_coin)
 				close_window(game);
 			return (0);
 		}

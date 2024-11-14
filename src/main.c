@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/12 16:48:22 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/14 20:19:58 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,15 @@ int	handle_key(int keycode, t_game *game)
 	return (0);
 }
 
+void	print_map(t_game *game)
+{
+	int	y;
+
+	y = 0;
+	while (game->map[y])
+		printf("%s", game->map[y++]);
+}
+
 int	main(int ac, char **av)
 {
 	t_game	game;
@@ -186,6 +195,9 @@ int	main(int ac, char **av)
 	game.img = &img;
 	parse_map(game.map_file, &game);
 	count_coin(&game);
+	print_map(&game);
+	check_path(&game);
+	print_map(&game);
 	map_check(&game);
 	mlx_expose_hook(game.win, display_map, &game);
 	mlx_key_hook(game.win, handle_key, &game);

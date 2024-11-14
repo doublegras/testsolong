@@ -6,7 +6,7 @@
 /*   By: SET YOUR USER UP <SET YOUR EMAIL UP>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 14:40:56 by SET YOUR USER     #+#    #+#             */
-/*   Updated: 2024/11/12 16:47:00 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/14 19:05:59 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,3 @@ void	map_check(t_game *game)
 		|| check_case(game, 'C') < 1)
 		err("Error\nYour map should contains 1 player, 1 exit and at least 1 coin", game);
 }
-

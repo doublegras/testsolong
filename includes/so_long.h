@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 11:51:36 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/12 16:16:30 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/14 19:08:40 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ int		count_line(t_game *game);
 int		check_case(t_game *game, char c);
 int		count_coin(t_game *game);
 void	check_file_extension(t_game *game);
+void	check_path(t_game *game);
 
 #endif

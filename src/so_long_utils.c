@@ -6,13 +6,13 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 15:57:10 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/12 16:24:13 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/14 20:15:51 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
-int	nb_coin = 0;
+int	g_nb_coin = 0;
 
 int	check_case(t_game *game, char c)
 {
@@ -61,12 +61,12 @@ int	count_coin(t_game *game)
 		while (game->map[y][x])
 		{
 			if (game->map[y][x] == 'C')
-				nb_coin++;
+				g_nb_coin++;
 			x++;
 		}
 		y++;
 	}
-	return (nb_coin);
+	return (g_nb_coin);
 }
 
 int	count_line(t_game *game)
