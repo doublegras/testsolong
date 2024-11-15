@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 14:54:17 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/14 20:33:36 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/15 11:06:04 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,28 +23,60 @@ static	int	check_wall(char c)
 	return (0);
 }
 
-static void	fill(t_game *game, int y, int x)
+static void	fill(char **map, int y, int x)
 {
-	if (game->map[y][x] == 'C')
+	if (map[y][x] == 'C')
 		g_coins++;
-	if (game->map[y][x] == 'E')
+	if (map[y][x] == 'E')
 		g_exit++;
-	if (game->map[y][x] == '0')
-		game->map[y][x] = 'X';
-	if (check_wall(game->map[y][x + 1]))
-		fill(game, y, x + 1);
-	if (check_wall(game->map[y - 1][x]))
-		fill(game, y - 1, x);
-	if (check_wall(game->map[y][x - 1]))
-		fill(game, y, x - 1);
-	if (check_wall(game->map[y + 1][x]))
-		fill(game, y + 1, x);
+	map[y][x] = 'X';
+	if (check_wall(map[y][x + 1]))
+		fill(map, y, x + 1);
+	if (check_wall(map[y - 1][x]))
+		fill(map, y - 1, x);
+	if (check_wall(map[y][x - 1]))
+		fill(map, y, x - 1);
+	if (check_wall(map[y + 1][x]))
+		fill(map, y + 1, x);
+}
+
+void	multi_free(char **map)
+{
+	int	y;
+
+	if (map)
+	{
+		y = 0;
+		while (map[y])
+			free(map[y++]);
+		free(map);
+	}
 }
 
 void	check_path(t_game *game)
 {
-	fill(game, game->player_y, game->player_x);
+	char	**map;
+	int		nb_line;
+	int		y;
+
+	nb_line = count_line(game) + 1;
+	map = malloc(nb_line * sizeof(char *));
+	if (!map)
+		err("Error\nMalloc error", game);
+	y = 0;
+	while (game->map[y])
+	{
+		map[y] = ft_strdup(game->map[y]);
+		if (!map[y])
+		{
+			multi_free(map);
+			err("Error\nft_strdup retuned NULL", game);
+		}
+		y++;
+	}
+	map[y] = 0;
+	fill(map, game->player_y, game->player_x);
+	multi_free(map);
 	if (g_coins != g_nb_coin || g_exit != 1)
-		printf("exit = %d\ntotal coin = %d\ncoins = %d\n", g_exit, g_nb_coin, g_exit);
-		/*err("Error\nExit and coins should be accessible by the player", game);*/
+		err("Error\nExit and coins should be accessible by the player", game);
 }

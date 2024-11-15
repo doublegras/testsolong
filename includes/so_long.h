@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 11:51:36 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/14 19:08:40 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/15 17:39:05 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,23 @@
 typedef struct s_imgx
 {
 	void	*player;
+	int		is_player;
 	void	*wall;
+	int		is_wall;
 	void	*grass;
+	int		is_grass;
 	void	*coin;
+	int		is_coin;
 	void	*door;
+	int		is_door;
+	int		is_set;
 }	t_imgx;
 
 typedef struct s_game
 {
 	t_xvar		*mlx;
 	t_win_list	*win;
-	t_imgx		*img;
+	t_imgx		img;
 	char		**map;
 	int			player_x;
 	int			player_y;
@@ -49,5 +55,7 @@ int		check_case(t_game *game, char c);
 int		count_coin(t_game *game);
 void	check_file_extension(t_game *game);
 void	check_path(t_game *game);
+void	multi_free(char **map);
+void	set_images(t_game *game);
 
 #endif

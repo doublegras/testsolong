@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 22:43:42 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/14 20:11:53 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/15 16:20:34 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ static int	make_move(t_game *game, int x, int y, int *i)
 				close_window(game);
 			return (0);
 		}
-		mlx_put_image_to_window(game->mlx, game->win, game->img->grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
-		mlx_put_image_to_window(game->mlx, game->win, game->img->player, x * PIXEL_SIZE, y * PIXEL_SIZE);
+		mlx_put_image_to_window(game->mlx, game->win, game->img.grass, game->player_x * PIXEL_SIZE, game->player_y * PIXEL_SIZE);
+		mlx_put_image_to_window(game->mlx, game->win, game->img.player, x * PIXEL_SIZE, y * PIXEL_SIZE);
 		*i += 1;
 		return (1);
 	}

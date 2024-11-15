@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 15:57:10 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/14 20:15:51 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/15 17:38:55 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,33 @@ int	count_coin(t_game *game)
 		y++;
 	}
 	return (g_nb_coin);
+}
+
+void	set_images(t_game *game)
+{
+	int		img_w;
+	int		img_h;
+
+	img_w = PIXEL_SIZE;
+	img_h = PIXEL_SIZE;
+	game->img.player = mlx_xpm_file_to_image(game->mlx, "img/cadillac.xpm", &img_w, &img_h);
+	if (game->img.player)
+		game->img.is_player = 1;
+	game->img.wall = mlx_xpm_file_to_image(game->mlx, "img/wall.xpm", &img_w, &img_h);
+	if (game->img.wall)
+		game->img.is_wall = 1;
+	game->img.grass = mlx_xpm_file_to_image(game->mlx, "img/grass.xpm", &img_w, &img_h);
+	if (game->img.grass)
+		game->img.is_grass = 1;
+	game->img.coin = mlx_xpm_file_to_image(game->mlx, "img/coin.xpm", &img_w, &img_h);
+	if (game->img.coin)
+		game->img.is_coin = 1;
+	game->img.door = mlx_xpm_file_to_image(game->mlx, "img/door.xpm", &img_w, &img_h);
+	if (game->img.door)
+		game->img.is_door = 1;
+	game->img.is_set = 1;
+	if (!game->img.player || !game->img.wall || !game->img.grass || !game->img.coin || !game->img.door)
+		close_window(game);
 }
 
 int	count_line(t_game *game)

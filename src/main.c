@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/14 20:19:58 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/15 17:51:29 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,25 @@
 
 void	destroy_images(t_game *game)
 {
-	if (game->img)
-		mlx_destroy_image(game->mlx, game->img->player);
+	if (game->img.is_player)
+		mlx_destroy_image(game->mlx, game->img.player);
+	if (game->img.is_wall)
+		mlx_destroy_image(game->mlx, game->img.wall);
+	if (game->img.is_grass)
+		mlx_destroy_image(game->mlx, game->img.grass);
+	if (game->img.is_coin)
+		mlx_destroy_image(game->mlx, game->img.coin);
+	if (game->img.is_door)
+		mlx_destroy_image(game->mlx, game->img.door);
 }
 
 int	close_window(t_game *game)
 {
-	destroy_images(game);
+	if (!game)
+		exit(1);
+	multi_free(game->map);
+	if (game->img.is_set)
+		destroy_images(game);
 	if (game->mlx && game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
@@ -53,7 +65,11 @@ int	count_line_fd(int fd, t_game *game)
 		free(line);
 		line = get_next_line(fd);
 		if (!line || *line == '\n')
+		{
+			if (i < 3)
+				err("Error\nYour map should be a rectangle", NULL);
 			return (i);
+		}
 		i++;
 	}
 		
@@ -91,15 +107,15 @@ void	parse_map(char *file, t_game *game)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err("Error\nRead error", game);
+		err("Error\nRead error", NULL);
 	nb = count_line_fd(fd, game);
 	close(fd);
 	map = malloc(sizeof(char *) * (nb + 1));
 	if (!map)
-		err("Error\nMap malloc error", game);
+		err("Error\nMap malloc error", NULL);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		err("Error\nRead error", game);
+		err("Error\nRead error", NULL);
 	i = 0;
 	while (i < nb)
 		map[i++] = get_next_line(fd);
@@ -121,18 +137,18 @@ int	display_map(t_game *game)
 		while (game->map[y][x])
 		{
 			if (game->map[y][x] == '1')
-				mlx_put_image_to_window(game->mlx, game->win, game->img->wall, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				mlx_put_image_to_window(game->mlx, game->win, game->img.wall, x * PIXEL_SIZE, y * PIXEL_SIZE);
 			if (game->map[y][x] == '0')
-				mlx_put_image_to_window(game->mlx, game->win, game->img->grass, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				mlx_put_image_to_window(game->mlx, game->win, game->img.grass, x * PIXEL_SIZE, y * PIXEL_SIZE);
 			if (game->map[y][x] == 'P')
 			{
-				mlx_put_image_to_window(game->mlx, game->win, game->img->player, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				mlx_put_image_to_window(game->mlx, game->win, game->img.player, x * PIXEL_SIZE, y * PIXEL_SIZE);
 				game->map[y][x] = '0';
 			}
 			if (game->map[y][x] == 'C')
-				mlx_put_image_to_window(game->mlx, game->win, game->img->coin, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				mlx_put_image_to_window(game->mlx, game->win, game->img.coin, x * PIXEL_SIZE, y * PIXEL_SIZE);
 			if (game->map[y][x] == 'E')
-				mlx_put_image_to_window(game->mlx, game->win, game->img->door, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				mlx_put_image_to_window(game->mlx, game->win, game->img.door, x * PIXEL_SIZE, y * PIXEL_SIZE);
 			x++;
 		}
 		y++;
@@ -157,48 +173,28 @@ int	handle_key(int keycode, t_game *game)
 	return (0);
 }
 
-void	print_map(t_game *game)
-{
-	int	y;
-
-	y = 0;
-	while (game->map[y])
-		printf("%s", game->map[y++]);
-}
-
 int	main(int ac, char **av)
 {
 	t_game	game;
-	t_imgx	img;
-	int		img_w;
-	int		img_h;
 
-	img_w = PIXEL_SIZE;
-	img_h = PIXEL_SIZE;
 	if (ac != 2)
 		err("Error\nYou must provide one argument", NULL);
 	game.map_file = av[1];
+	game.img.is_set = 0;
+	game.mlx = 0;
+	game.win = 0;
 	check_file_extension(&game);
-	game.mlx = mlx_init();
-	if (!game.mlx)
-		exit(1);
-	game.win = mlx_new_window(game.mlx, 2560, 1600, "so_long");
-	if (!game.win)
-		exit(1);
-	img.player = mlx_xpm_file_to_image(game.mlx, "img/cadillac.xpm", &img_w, &img_h);
-	img.wall = mlx_xpm_file_to_image(game.mlx, "img/wall.xpm", &img_w, &img_h);
-	img.grass = mlx_xpm_file_to_image(game.mlx, "img/grass.xpm", &img_w, &img_h);
-	img.coin = mlx_xpm_file_to_image(game.mlx, "img/coin.xpm", &img_w, &img_h);
-	img.door = mlx_xpm_file_to_image(game.mlx, "img/door.xpm", &img_w, &img_h);
-	if (!img.player)
-		exit(1);
-	game.img = &img;
 	parse_map(game.map_file, &game);
 	count_coin(&game);
-	print_map(&game);
-	check_path(&game);
-	print_map(&game);
 	map_check(&game);
+	check_path(&game);
+	game.mlx = mlx_init();
+	if (!game.mlx)
+		err("Error\nCannot connect to X11", &game);
+	game.win = mlx_new_window(game.mlx, 3560, 2000, "so_long");
+	if (!game.win)
+		err("Error\nCannot create window", &game);
+	set_images(&game);
 	mlx_expose_hook(game.win, display_map, &game);
 	mlx_key_hook(game.win, handle_key, &game);
 	mlx_hook(game.win, 17, 0, close_window, &game);
