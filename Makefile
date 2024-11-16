@@ -14,7 +14,7 @@ GCCFLAGS = -g -Wall -Werror -Wextra
 
 MLX_DIR = ./mlx_linux
 
-SRC = main.c move_player.c map_check.c so_long_utils.c path.c
+SRC = main.c move_player.c map_check.c so_long_utils.c path.c so_long_utils_1.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 	

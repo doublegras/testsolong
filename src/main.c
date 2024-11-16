@@ -6,7 +6,7 @@
 /*   By: maambuhl <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 16:40:18 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/15 17:51:29 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/16 17:01:47 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	destroy_images(t_game *game)
 
 int	close_window(t_game *game)
 {
-	if (!game)
-		exit(1);
 	multi_free(game->map);
 	if (game->img.is_set)
 		destroy_images(game);
@@ -43,61 +41,6 @@ int	close_window(t_game *game)
 	exit(0);
 }
 
-void	err(char *str, t_game *game)
-{
-	ft_putstr_fd(str, 2);
-	if (game)
-		close_window(game);
-	exit(1);
-}
-
-int	count_line_fd(int fd, t_game *game)
-{
-	int		i;
-	char	*line;
-
-	line = get_next_line(fd);
-	if (!line)
-		err("Error\nCan't get the line", game);
-	i = 1;
-	while (1)
-	{
-		free(line);
-		line = get_next_line(fd);
-		if (!line || *line == '\n')
-		{
-			if (i < 3)
-				err("Error\nYour map should be a rectangle", NULL);
-			return (i);
-		}
-		i++;
-	}
-		
-}
-
-void	get_player_pos(t_game *game)
-{
-	int	y;
-	int	x;
-
-	y = 0;
-	while (game->map[y])
-	{
-		x = 0;
-		while (game->map[y][x])
-		{
-			if (game->map[y][x] == 'P')
-			{
-				game->player_x = x;
-				game->player_y = y;
-				return ;
-			}
-			x++;
-		}
-		y++;
-	}
-}
-
 void	parse_map(char *file, t_game *game)
 {
 	int		fd;
@@ -105,9 +48,7 @@ void	parse_map(char *file, t_game *game)
 	int		i;
 	char	**map;
 
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		err("Error\nRead error", NULL);
+	fd = open_map(game);
 	nb = count_line_fd(fd, game);
 	close(fd);
 	map = malloc(sizeof(char *) * (nb + 1));
@@ -130,45 +71,26 @@ int	display_map(t_game *game)
 	int	y;
 	int	x;
 
-	y = 0;
-	while (game->map[y])
+	y = -1;
+	while (game->map[++y])
 	{
-		x = 0;
-		while (game->map[y][x])
+		x = -1;
+		while (game->map[y][++x])
 		{
 			if (game->map[y][x] == '1')
-				mlx_put_image_to_window(game->mlx, game->win, game->img.wall, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				display_map_helper(game, x, y, game->img.wall);
 			if (game->map[y][x] == '0')
-				mlx_put_image_to_window(game->mlx, game->win, game->img.grass, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				display_map_helper(game, x, y, game->img.grass);
 			if (game->map[y][x] == 'P')
 			{
-				mlx_put_image_to_window(game->mlx, game->win, game->img.player, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				display_map_helper(game, x, y, game->img.player);
 				game->map[y][x] = '0';
 			}
 			if (game->map[y][x] == 'C')
-				mlx_put_image_to_window(game->mlx, game->win, game->img.coin, x * PIXEL_SIZE, y * PIXEL_SIZE);
+				display_map_helper(game, x, y, game->img.coin);
 			if (game->map[y][x] == 'E')
-				mlx_put_image_to_window(game->mlx, game->win, game->img.door, x * PIXEL_SIZE, y * PIXEL_SIZE);
-			x++;
+				display_map_helper(game, x, y, game->img.door);
 		}
-		y++;
-	}
-	return (0);
-}
-
-int	handle_key(int keycode, t_game *game)
-{
-	static int	i;
-	int			tmp;
-
-	tmp = i;
-	if (keycode == 65307)
-		close_window(game);
-	if (keycode == 119 || keycode == 97 || keycode == 115 || keycode == 100)
-	{
-		move_player(game, keycode, &i);
-		if (i > tmp)
-			ft_printf("%d\n", i);
 	}
 	return (0);
 }

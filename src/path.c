@@ -6,13 +6,12 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 14:54:17 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/15 11:06:04 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/16 15:07:22 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
-extern int	g_nb_coin;
 int			g_coins = 0;
 int			g_exit = 0;
 
@@ -77,6 +76,6 @@ void	check_path(t_game *game)
 	map[y] = 0;
 	fill(map, game->player_y, game->player_x);
 	multi_free(map);
-	if (g_coins != g_nb_coin || g_exit != 1)
+	if (g_coins != game->total_coin || g_exit != 1)
 		err("Error\nExit and coins should be accessible by the player", game);
 }
