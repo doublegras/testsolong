@@ -12,14 +12,18 @@ SRC_DIR = src
 
 GCCFLAGS = -g -Wall -Werror -Wextra
 
+MLX = $(MLX_DIR)/libmlx_Linux.a
+
 MLX_DIR = ./mlx_linux
 
 SRC = main.c move_player.c map_check.c so_long_utils.c path.c so_long_utils_1.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 	
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(MLX)
+$(MLX):
 	make -C $(MLX_DIR) all
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(MLX)
 	gcc $(GCCFLAGS) -I/usr/include -Iincludes -Imlx_linux -o $@ -c $<
 
 all: $(NAME)

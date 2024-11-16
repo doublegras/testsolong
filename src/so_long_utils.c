@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 15:57:10 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/16 15:34:53 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/16 17:07:59 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	set_images(t_game *game)
 	game->img.door = mlx_xpm_file_to_image(game->mlx, D, &img_w, &img_h);
 	if (game->img.door)
 		game->img.is_door = 1;
+	game->img.is_set = 1;
 	if (!game->img.player || !game->img.wall || !game->img.grass
 		|| !game->img.coin || !game->img.door)
 		close_window(game);
