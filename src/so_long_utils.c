@@ -6,7 +6,7 @@
 /*   By: maambuhl <marcambuehl4@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 15:57:10 by maambuhl          #+#    #+#             */
-/*   Updated: 2024/11/16 17:07:59 by maambuhl         ###   LAUSANNE.ch       */
+/*   Updated: 2024/11/27 14:02:14 by maambuhl         ###   LAUSANNE.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ void	check_file_extension(t_game *game)
 
 	len = ft_strlen(game->map_file);
 	if (len <= 4)
-		err("Map file should look like this: <map name>.ber", NULL);
+		err("Error\nMap file should look like this: <map name>.ber", NULL);
 	len--;
 	if (game->map_file[len] != 'r' || game->map_file[len - 1] != 'e'
 		|| game->map_file[len - 2] != 'b' || game->map_file[len - 3] != '.')
-		err("Map file should look like this: <map name>.ber", NULL);
+		err("Error\nMap file should look like this: <map name>.ber", NULL);
 }
 
 void	count_coin(t_game *game)

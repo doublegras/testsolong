@@ -19,7 +19,10 @@ MLX_DIR = ./mlx_linux
 SRC = main.c move_player.c map_check.c so_long_utils.c path.c so_long_utils_1.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
-	
+
+$(NAME): $(PRINTF) $(OBJ_DIR) $(OBJ) $(MLX)
+	gcc $(GCCFLAGS) $(OBJ) -L/usr/lib -I includes -Lft_printf -lftprintf -Lmlx_linux -lmlx_Linux -Imlx_linux -lXext -lX11 -o $(NAME)
+
 $(MLX):
 	make -C $(MLX_DIR) all
 
@@ -27,9 +30,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(MLX)
 	gcc $(GCCFLAGS) -I/usr/include -Iincludes -Imlx_linux -o $@ -c $<
 
 all: $(NAME)
-
-$(NAME): $(PRINTF) $(OBJ_DIR) $(OBJ) $(MLX)
-	gcc $(GCCFLAGS) $(OBJ) -L/usr/lib -I includes -Lft_printf -lftprintf -Lmlx_linux -lmlx_Linux -Imlx_linux -lXext -lX11 -o $(NAME)
 
 $(PRINTF):
 	make -C $(PRINTF_DIR) all
